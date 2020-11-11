@@ -6,10 +6,11 @@ package keystore
 import (
 	"fmt"
 
-	"github.com/ChainSafe/chainbridge-utils/crypto"
-	"github.com/ChainSafe/chainbridge-utils/crypto/secp256k1"
-	"github.com/ChainSafe/chainbridge-utils/crypto/sr25519"
 	"github.com/centrifuge/go-substrate-rpc-client/signature"
+	"github.com/wintexpro/chainbridge-utils/crypto"
+	"github.com/wintexpro/chainbridge-utils/crypto/ed25519"
+	"github.com/wintexpro/chainbridge-utils/crypto/secp256k1"
+	"github.com/wintexpro/chainbridge-utils/crypto/sr25519"
 )
 
 // The Constant "keys". These are the name that the keys are based on. This can be expanded, but
@@ -23,6 +24,7 @@ const EveKey = "eve"
 var Keys = []string{AliceKey, BobKey, CharlieKey, DaveKey, EveKey}
 
 // The Chain type Constants
+const TonChain = "ton"
 const EthChain = "ethereum"
 const SubChain = "substrate"
 
@@ -60,6 +62,7 @@ var EveSr25519 = sr25519.NewKeypairFromKRP(signature.KeyringPair{
 
 // TestKeyStore is a struct that holds a Keystore of all the test keys
 type TestKeyRingHolder struct {
+	TonKeys       map[string]*ed25519.Keypair
 	EthereumKeys  map[string]*secp256k1.Keypair
 	SubstrateKeys map[string]*sr25519.Keypair
 }
@@ -67,6 +70,7 @@ type TestKeyRingHolder struct {
 // Init function to create a keyRing that can be accessed anywhere without having to recreate the data
 func init() {
 	TestKeyRing = &TestKeyRingHolder{
+		TonKeys:      makeTonRing(),
 		EthereumKeys: makeEthRing(),
 		SubstrateKeys: map[string]*sr25519.Keypair{
 			AliceKey:   AliceSr25519,
@@ -77,6 +81,20 @@ func init() {
 		},
 	}
 
+}
+
+func makeTonRing() map[string]*ed25519.Keypair {
+	ring := map[string]*ed25519.Keypair{}
+
+	for _, key := range Keys {
+		kp := new(ed25519.Keypair)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		ring[key] = kp
+	}
+
+	return ring
 }
 
 func makeEthRing() map[string]*secp256k1.Keypair {
@@ -108,6 +126,8 @@ func insecureKeypairFromAddress(key string, chainType string) (crypto.Keypair, e
 		kp, ok = TestKeyRing.EthereumKeys[key]
 	} else if chainType == SubChain {
 		kp, ok = TestKeyRing.SubstrateKeys[key]
+	} else if chainType == TonChain {
+		kp, ok = TestKeyRing.TonKeys[key]
 	} else {
 		return nil, fmt.Errorf("unrecognized chain type: %s", chainType)
 	}

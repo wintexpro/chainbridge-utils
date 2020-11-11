@@ -1,12 +1,14 @@
 # chainbridge-utils
 
-# ChainSafe Security Policy
+This repository is fork from [ChainSafe/chainbridge-utils](https://github.com/ChainSafe/chainbridge-utils)
 
-## Reporting a Security Bug
+## Requirements
 
-We take all security issues seriously, if you believe you have found a security issue within a ChainSafe
-project please notify us immediately. If an issue is confirmed, we will take all necessary precautions 
-to ensure a statement and patch release is made in a timely manner.
+- [Rust](https://www.rust-lang.org/tools/install)
+- [TON-SDK](https://github.com/tonlabs/TON-SDK) - important version `1.1.0` and compile it via `cargo build --release`
 
-Please email us a description of the flaw and any related information (e.g. reproduction steps, version) to
-[security at chainsafe dot io](mailto:security@chainsafe.io).
+One need to specify compiled DLL directory path:
+
+```sh
+export CGO_LDFLAGS="-L//${TON_SDK_PATH}/target/release/deps/ -lton_client"
+```

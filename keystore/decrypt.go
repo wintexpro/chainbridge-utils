@@ -10,9 +10,10 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/ChainSafe/chainbridge-utils/crypto"
-	"github.com/ChainSafe/chainbridge-utils/crypto/secp256k1"
-	"github.com/ChainSafe/chainbridge-utils/crypto/sr25519"
+	"github.com/wintexpro/chainbridge-utils/crypto"
+	"github.com/wintexpro/chainbridge-utils/crypto/ed25519"
+	"github.com/wintexpro/chainbridge-utils/crypto/secp256k1"
+	"github.com/wintexpro/chainbridge-utils/crypto/sr25519"
 )
 
 // Decrypt uses AES to decrypt ciphertext with the symmetric key deterministically created from `password`
@@ -42,6 +43,9 @@ func DecodeKeypair(in []byte, keytype crypto.KeyType) (kp crypto.Keypair, err er
 		err = kp.Decode(in)
 	} else if keytype == crypto.Sr25519Type {
 		kp = &sr25519.Keypair{}
+		err = kp.Decode(in)
+	} else if keytype == crypto.Ed25519Type {
+		kp = &ed25519.Keypair{}
 		err = kp.Decode(in)
 	} else {
 		return nil, errors.New("cannot decode key: invalid key type")

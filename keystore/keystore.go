@@ -29,12 +29,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ChainSafe/chainbridge-utils/crypto"
+	"github.com/wintexpro/chainbridge-utils/crypto"
 )
 
 const EnvPassword = "KEYSTORE_PASSWORD"
 
 var keyMapping = map[string]string{
+	"ton":       "ed25519",
 	"ethereum":  "secp256k1",
 	"substrate": "sr25519",
 }

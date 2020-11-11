@@ -14,9 +14,10 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/ChainSafe/chainbridge-utils/crypto"
-	"github.com/ChainSafe/chainbridge-utils/crypto/secp256k1"
-	sr25519 "github.com/ChainSafe/chainbridge-utils/crypto/sr25519"
+	"github.com/wintexpro/chainbridge-utils/crypto"
+	"github.com/wintexpro/chainbridge-utils/crypto/ed25519"
+	"github.com/wintexpro/chainbridge-utils/crypto/secp256k1"
+	sr25519 "github.com/wintexpro/chainbridge-utils/crypto/sr25519"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -76,6 +77,10 @@ func EncryptAndWriteToFile(file *os.File, kp crypto.Keypair, password []byte) er
 
 	keytype := ""
 
+	if _, ok := kp.(*ed25519.Keypair); ok {
+		keytype = crypto.Ed25519Type
+	}
+
 	if _, ok := kp.(*sr25519.Keypair); ok {
 		keytype = crypto.Sr25519Type
 	}
@@ -85,7 +90,7 @@ func EncryptAndWriteToFile(file *os.File, kp crypto.Keypair, password []byte) er
 	}
 
 	if keytype == "" {
-		return errors.New("cannot write key not of type secp256k1 or sr25519")
+		return errors.New("cannot write key not of type secp256k1, sr25519 or ed25519")
 	}
 
 	keydata := &EncryptedKeystore{

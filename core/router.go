@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/ChainSafe/chainbridge-utils/msg"
 	log "github.com/ChainSafe/log15"
+	"github.com/wintexpro/chainbridge-utils/msg"
 )
 
 // Writer consumes a message and makes the requried on-chain interactions.
