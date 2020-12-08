@@ -1,4 +1,4 @@
-module github.com/wintexpro/chainbridge-utils/v1
+module github.com/wintexpro/chainbridge-utils
 
 go 1.15
 
