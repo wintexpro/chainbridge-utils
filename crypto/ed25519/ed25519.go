@@ -12,6 +12,7 @@ var _ crypto.Keypair = &Keypair{}
 
 type Keypair struct {
 	public   []byte
+	secret   []byte
 	mnemonic string
 }
 
@@ -48,6 +49,7 @@ func NewKeypairFromSeed(seed string) (*Keypair, error) {
 
 	kp := Keypair{
 		public:   []byte(res.Public),
+		secret:   []byte(res.Secret),
 		mnemonic: seed,
 	}
 
@@ -64,6 +66,7 @@ func (kp *Keypair) Decode(in []byte) error {
 	newkp, err := NewKeypairFromSeed(string(in))
 
 	kp.public = newkp.public
+	kp.secret = newkp.secret
 	kp.mnemonic = newkp.mnemonic
 
 	return err
@@ -77,4 +80,9 @@ func (kp *Keypair) Address() string {
 // PublicKey returns the publickey encoded as a string
 func (kp *Keypair) PublicKey() string {
 	return string(kp.public)
+}
+
+// SecretKey returns the secretkey encoded as a string
+func (kp *Keypair) SecretKey() string {
+	return string(kp.secret)
 }

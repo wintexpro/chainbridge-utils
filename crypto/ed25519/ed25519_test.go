@@ -20,7 +20,11 @@ func TestNewKeypair(t *testing.T) {
 	}
 
 	if kp.PublicKey() != "ebc77aae202a4f12237e10892f4fe0e44f8fb3dfc07008dcc12b37f8f70c1149" {
-		t.Fatalf("pubkey is not correct: %#v", kp)
+		t.Fatalf("pubkey is not correct: %#v", kp.PublicKey())
+	}
+
+	if kp.SecretKey() != "f2b8ead4382c6d656a841b3a9dd190e66c0edcdb2d8df91ed665857c8b674977" {
+		t.Fatalf("secretkey is not correct: %#v", kp.SecretKey())
 	}
 }
 
