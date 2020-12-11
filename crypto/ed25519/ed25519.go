@@ -14,6 +14,7 @@ type Keypair struct {
 	public   []byte
 	secret   []byte
 	mnemonic string
+	address  string
 }
 
 func newClient() (*client.Client, error) {
@@ -72,9 +73,13 @@ func (kp *Keypair) Decode(in []byte) error {
 	return err
 }
 
-// Address returns the ss58 formated address
+func (kp *Keypair) SetAddress(address string) {
+	kp.address = address
+}
+
+// Address returns the setted address
 func (kp *Keypair) Address() string {
-	return ""
+	return kp.address
 }
 
 // PublicKey returns the publickey encoded as a string
