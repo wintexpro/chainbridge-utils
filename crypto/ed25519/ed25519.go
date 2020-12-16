@@ -11,10 +11,9 @@ import (
 var _ crypto.Keypair = &Keypair{}
 
 type Keypair struct {
-	public   []byte
-	secret   []byte
-	mnemonic string
-	address  string
+	public  []byte
+	secret  []byte
+	address string
 }
 
 func newClient() (*client.Client, error) {
@@ -31,10 +30,14 @@ func GenerateKeypair() (*Keypair, error) {
 		return nil, err
 	}
 
-	res, err := c.CryptoMnemonicFromRandom(&client.ParamsOfMnemonicFromRandom{})
-	kp, err := NewKeypairFromSeed(res.Phrase)
+	res, err := c.CryptoGenerateRandomSignKeys()
 
-	return kp, err
+	kp := Keypair{
+		public: []byte(res.Public),
+		secret: []byte(res.Secret),
+	}
+
+	return &kp, err
 }
 
 func NewKeypairFromSeed(seed string) (*Keypair, error) {
@@ -49,9 +52,8 @@ func NewKeypairFromSeed(seed string) (*Keypair, error) {
 	res, err := c.CryptoMnemonicDeriveSignKeys(&mnemonic)
 
 	kp := Keypair{
-		public:   []byte(res.Public),
-		secret:   []byte(res.Secret),
-		mnemonic: seed,
+		public: []byte(res.Public),
+		secret: []byte(res.Secret),
 	}
 
 	return &kp, err
@@ -59,16 +61,26 @@ func NewKeypairFromSeed(seed string) (*Keypair, error) {
 
 // Encode uses scale to encode underlying KeyringPair
 func (kp *Keypair) Encode() []byte {
-	return []byte(kp.mnemonic)
+	return []byte(kp.secret)
 }
 
 // Decode initializes keypair by decoding input as a KeyringPair
 func (kp *Keypair) Decode(in []byte) error {
-	newkp, err := NewKeypairFromSeed(string(in))
+	c, err := newClient()
+	defer c.Close()
 
-	kp.public = newkp.public
-	kp.secret = newkp.secret
-	kp.mnemonic = newkp.mnemonic
+	if err != nil {
+		return err
+	}
+
+	params := client.ParamsOfNaclSignKeyPairFromSecret{
+		Secret: string(in),
+	}
+
+	keypair, err := c.CryptoNaclSignKeypairFromSecretKey(&params)
+
+	kp.public = []byte(keypair.Public)
+	kp.secret = []byte(keypair.Secret[0:len(keypair.Public)])
 
 	return err
 }
