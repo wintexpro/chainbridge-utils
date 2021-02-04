@@ -8,6 +8,7 @@ require (
 	github.com/ethereum/go-ethereum v1.9.17
 	github.com/pierrec/xxHash v0.1.5 // indirect
 	github.com/prometheus/client_golang v1.4.1
-	github.com/radianceteam/ton-client-go v0.1.0
+	github.com/radianceteam/ton-client-go v1.6.0
+	github.com/volatiletech/null v8.0.0+incompatible
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
 )

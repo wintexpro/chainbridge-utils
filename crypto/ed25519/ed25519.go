@@ -5,6 +5,7 @@ package ed25519
 
 import (
 	"github.com/radianceteam/ton-client-go/client"
+	"github.com/volatiletech/null"
 	"github.com/wintexpro/chainbridge-utils/crypto"
 )
 
@@ -18,7 +19,7 @@ type Keypair struct {
 
 func newClient() (*client.Client, error) {
 	return client.NewClient(client.Config{
-		Network: &client.NetworkConfig{ServerAddress: ""},
+		Network: &client.NetworkConfig{ServerAddress: null.StringFrom("")},
 	})
 }
 
